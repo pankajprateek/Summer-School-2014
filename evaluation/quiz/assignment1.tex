@@ -1,0 +1,160 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}  
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage{graphicx} % Required to insert images
+%\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage{xcolor}
+\geometry{body={6.5in, 9.0in},
+  left=0.9in,
+  top=1in
+}
+
+\lstset{language=C++,
+  basicstyle=\ttfamily,
+  tabsize=3,
+  keywordstyle=\color{blue}\ttfamily,
+  stringstyle=\color{green}\ttfamily,
+  commentstyle=\color{red}\ttfamily,
+  morecomment=[l][\color{magenta}]{\#},
+  % backgroundcolor=\color{black!5},
+  % basicstyle=\footnotesize,
+}
+
+\pagestyle{empty}
+\date{ }
+\begin{document}
+\begin{center}
+\textbf{\LARGE{ACA Summer School 2014}}\vspace{.5cm}
+
+\large{Advanced C\texttt{++}} \\ \vspace{.5cm}
+
+\textbf{\large{Quiz 1}}\\
+\end{center}
+
+\begin{enumerate}
+  \item Explain what is an object?\\\\\\\\
+  \item Explain about inheritance?\\\\\\\\
+  \item Why are constructors required?\\\\\\\\
+  \item What will be the output of the following program. Explain.
+    \begin{lstlisting}
+#include <iostream>
+using namespace std;
+class Book
+{
+  int PageCount;
+  int CurrentPage;
+public:
+  // Constructor
+  Book( int Numpages);
+  // Destructor
+  ~Book(){
+    cout<<''I completed this book\n'';
+  } ;
+  void bookMark( int PageNumber);
+  int getBookMark( void );
+};
+Book::Book( int NumPages){
+  PageCount = NumPages;
+  cout<<''I have started reading a new book\n'';
+}
+void Book::bookMark( int PageNumber){
+  CurrentPage=PageNumber;
+}
+int Book::getBookMark( void ){
+  return CurrentPage;
+}
+int main() {
+  Book HP8(498) ;
+  HP8.bookMark( 56 ) ;
+  return 0;
+}
+    \end{lstlisting}\vspace*{100mm}
+  \item Extend the above Book class so that Book class also contains publisher name, author name and book name. Now create three more constructors in the new Book class, so that we can create new objects when:
+    \begin{enumerate}
+    \item We have all the information about a book
+    \item We don't know the publisher's name and number of pages in the book
+    \item We don't have any information about the book ( Default constructor)
+    \end{enumerate}\vspace*{100mm}
+
+    \item You have points in a 2 dimensional space. Create a point class with just one constructor which takes both x and y coordinate. Also create a method in the point class which takes a point as an argument and returns the squared distance between the two points.\vspace*{100mm}
+
+    \item 
+      \begin{lstlisting}
+class X {
+public: int a;
+protected: int b;
+private: int c;
+  int fx();
+};
+class Y : public X {
+public: int f();
+};
+class Z : protected X {
+public: int g();
+};
+class W : private X {
+public: int h();
+};
+int main() {
+  X x;
+  Y y;
+  Z z;
+  W w;
+}
+      \end{lstlisting}
+      Answer the following questions based on code above:
+      \begin{enumerate}[a)]
+      \item Which out of x.a,x.b,x.c are accessible inside main()
+      \item Which out of y.a,y.b,y.c are accessible inside main()
+      \item Which out of z.a,z.b,z.c are accessible inside main()
+      \item Which out of w.a,w.b,w.c are accessible inside main()
+      \item Which out of a,b,c are accessible inside f()
+      \item Which out of a,b,c are accessible inside g()
+      \item Which out of a,b,c are accessible inside h()
+      \item Which out of a,b,c are accessible inside fx()
+      \end{enumerate}\newpage
+      \item Explain the output of the following code:
+        \begin{lstlisting}
+#include<iostream>
+using namespace std;
+class A {
+public:
+  void f() {
+    cout << ``A::f'' << endl;
+  }
+  virtual void g() {
+    cout << ``A::g'' << endl;
+  }
+};
+class B : public A {
+public:
+  void f() {
+    cout << ``B::f'' << endl;
+  }
+  virtual void g() {
+    cout << ``B::g'' << endl;
+  }
+};
+int main(int argc, char** argv) {
+  A a;
+  B b;
+  A* aPtr = &a;
+  B* bPtr = &b;
+  aPtr->f();
+  aPtr->g();
+  bPtr->f();
+  bPtr->g();
+  return 0;
+}
+        \end{lstlisting}
+\end{enumerate}
+
+
+\end{document}

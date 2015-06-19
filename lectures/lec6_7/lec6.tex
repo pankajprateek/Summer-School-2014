@@ -1,0 +1,379 @@
+\documentclass{beamer}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{fancyvrb}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{listings}
+\mode<presentation>
+%{ \usetheme{Warsaw} }
+\title{ACA Summer School 2014\\ Advanced C\texttt{++}}
+
+\setbeamercovered{transparent=5}
+
+\author{Pankaj Prateek}
+\institute{ACA, CSE, IIT Kanpur}
+\date{\today}
+
+\lstset{language=C++,
+  basicstyle=\ttfamily,
+  tabsize=3,
+  keywordstyle=\color{blue}\ttfamily,
+  stringstyle=\color{green}\ttfamily,
+  commentstyle=\color{red}\ttfamily,
+  morecomment=[l][\color{magenta}]{\#},
+  backgroundcolor=\color{black!5},
+  % basicstyle=\footnotesize,
+}
+ 
+\AtBeginSection[]  % "Beamer, do the following at the start of every section"
+{
+\begin{frame}<beamer> 
+\frametitle{Outline} % make a frame titled "Outline"
+\tableofcontents[currentsection]  % show TOC and highlight current section
+\end{frame}
+}
+
+\begin{document}
+%----------- titlepage ----------------------------------------------%
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}[fragile]{Dynamic Memory allocation}
+  \begin{itemize}
+    \item Until now, the variables we saw must be declared at compile time.\pause
+    \item Array sizes need to be declared at compile time.\pause
+    \item Issues:\pause
+      \begin{itemize}
+      \item Difficult to conditionally declare a variable\pause
+      \item Size of all arrays must be declared in advance.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Dynamic Memory allocation}
+  \begin{itemize}
+    \item Best we can do is to guess the maximum size and hope that would be enough.\pause
+    \item Poor Solution:\pause
+      \begin{itemize}
+        \item Wasted memory in case the variables are not used.\pause
+        \item Artificial Limitations and buffer overflows
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Dynamic Memory allocation}
+  \begin{itemize}
+    \item Dynamic Memory Allocation: Allocate memory of whatever size we need, whenever we need it
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Dynamic Memory allocation: Single Variables}
+  \begin{itemize}
+    \item Scalar(non-array) form of \texttt{new} operator is used\pause
+      \begin{lstlisting}
+int *value = new int;
+*value = 7;
+      \end{lstlisting}\pause
+    \item \texttt{new} operator returns the address of the variable allocated, which can be stored in a pointer.\pause
+    \item When done with the dynamically allocated memory, explicitly free it for reuse\pause
+      \begin{lstlisting}
+delete value;
+// Reinitialize value pointer to NULL
+value = 0;
+      \end{lstlisting}\pause
+    \item \texttt{delete} does not delete the pointer, it deletes the memory the pointer was pointing to
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Dynamic Memory allocation: Arrays}
+  \begin{itemize}
+    \item Allows to choose their size dynamically while program is running\pause
+    \item Use array form of \texttt{new}(\texttt{new[]}) and \texttt{delete}(\texttt{delete[]})\pause
+      \begin{lstlisting}
+int n = 10;
+int *array = new int[n];
+delete[] array;
+      \end{lstlisting}\pause
+    \item While declaring array, \texttt{new[]} is called even though not explicitly written\pause
+    \item While deleting, need to use \texttt{delete[]} to tell CPU to delete multiple variables instead of a single one.\pause
+    \item Access is same as even normal arrays are const pointers
+  \end{itemize}
+\end{frame}
+
+%% \begin{frame}[fragile]{Virtual functions and function pointers}
+  %% \begin{itemize}
+  %%   \item 
+  %% \end{itemize}
+%% \end{frame}
+
+\begin{frame}[fragile]{Operator Overloading}
+  \begin{itemize}
+    \item Allows the programmer to define how operators should interact with various data type.\pause
+    \item Because operators in C\texttt{++} are implemented as functions, operator overloading works very analogously to function overloading.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Operator Overloading}
+  \begin{lstlisting}
+class complex {
+  double re, im;
+public:
+  // functions etc.
+};
+  \end{lstlisting}\pause
+  \begin{itemize}
+    \item c1+c2 is not valid as the compiler does not know what the operator + should do.\pause
+    \item Almost any operator can be overloading in C++. Exceptions are arithmetic if(?:), sizeof, scope(::), member selector(.) and member pointer selector(.*)\pause
+    \item Allows to use classes in a more intuitive way.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Operator Overloading: Basic Rules}
+  \begin{itemize}
+  \item Atleast one of the operands in any overloaded operator must be a user-defined type.\pause
+  \item Only operators which exist can be overloaded. Cannot create an operator ** to do exponentiation\pause
+  \item All operators keep their current precedence and associativity. Eg: Bitwise XOR( $\hat{ }$ ) can be used to do exponents, but it would have wrong precedence and associavity.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Operator Overloading}
+  \begin{block}{Operators as functions}
+    \begin{itemize}
+    \item nx + ny is equivalent to operator+(nx, ny)\pause
+    \item Function overloading is used to resolve the function calls to different versions of the function based on parameter type(s).\pause
+    \item When evaluating an expression with operators, C++ looks at the operands around the operator to see what type they are. \pause
+      \begin{itemize}
+      \item If all operands are built-in types, C++ calls a built-in routine. \pause
+      \item If any of the operands are user data types, it looks to see whether the class has an overloaded operator function that it can call. \pause
+      \item If the compiler finds an overloaded operator whose parameters match the types of the operands, it calls that function. \pause
+      \item Otherwise, it produces a compiler error.
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[fragile]{Templates}
+  \begin{itemize}
+    \item Generic Programming: style of programming which is free of types\pause
+    \item Templates are foundations of generic programming\pause
+    \item Templates allow us to write a generic function with types known dynamically (Remember function overloading!)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Function Templates}
+  \begin{lstlisting}
+void PrintInt(int n) {
+  cout<<''Data=''<<n<<endl;
+}
+void PrintFloat(float n) {
+  cout<<''Data=''<<n<<endl;
+}
+  \end{lstlisting}\pause
+  Apart from the input data type, both functions are identical
+\end{frame}
+
+\begin{frame}[fragile]{Function Templates}
+  \begin{lstlisting}
+Template<typename T>
+void Print(T n) {
+  cout<<''Data=''<<n<<endl;
+}
+  \end{lstlisting}\pause
+  \begin{itemize}
+    \item The first line tells the compiler what follows is a function template\pause
+    \item Actual meaning of T, template-type parameter, would be deduced by the compiler from the arguement to the function
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Function Templates: Why???}
+  \begin{itemize}
+  \item The functions are generated by the compiler\pause
+  \item The real benefit is that the programmer does not have to copy-paste the code, he does not need to write down a new overload for each new data-type which is created.\pause
+  \item Most compilers make optimizations to the code from templates which would not be possible in their absence
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class Templates}
+  \begin{itemize}
+  \item Helpful in defining types whose behaviour is generic and reusable\pause
+    \begin{lstlisting}
+class item {
+  int data;
+  ....
+};
+class item {
+  float data;
+  ....
+};
+    \end{lstlisting}\pause
+  \item If similar functionality for other data-types is needed, need to duplicate code or maybe even entire class. It incurs code maintenance issues, increases code size at the source code as well as at binary level
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class Templates}
+  \begin{itemize}
+  \item Instead define a class using a template\pause
+    \begin{lstlisting}
+template<typename T>
+class item{
+  T data;
+  ....
+};
+item<int> item1;
+item<float> item2;
+    \end{lstlisting}\pause
+  \item With function templates, the type of arguements were sufficient for the compiler to call the correct function, but with class templates, the template type should be explicitly passes in angle brackets
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class Templates: Example}
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+item<int> instantiated
+      \begin{lstlisting}
+item<int> item1;
+item1.set(29);
+item1.print();
+      \end{lstlisting}\pause
+    \end{column}
+    \begin{column}{0.4\textwidth}
+item<float> instantiated
+      \begin{lstlisting}
+item<float> item1;
+item1.set(29.5);
+item1.print();
+      \end{lstlisting}\pause
+    \end{column}
+  \end{columns}
+  \begin{itemize}
+  \item No relation between the two instantiations. For the compiler and the linker, they are two different entities, say two different classes
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Templates: A note}
+  \begin{itemize}
+  \item Instead of keyword \texttt{typename} in the template definition, keyword \texttt{class} can also be used without any change in the sematics of the code\pause
+    \begin{lstlisting}
+template<typename T> 
+// can be replaced by 
+template<class T>
+    \end{lstlisting}\pause
+  \item I prefer typename to class because it shows that the template parameter need not be a class
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Library}
+  \begin{itemize}
+    \item In computer science, a library is a collection of subroutines or classes used to develop software quickly and efficiently\pause
+    \item Usually libraries have functions/constructs which are used very frequently by programmers\pause
+    \item Examples : STL, Boost C++\pause
+    \item When you create a software, and want others to use it too, roll it out in the form of a library\pause
+    \item How to use a particular library depends completely on the implementation of the library\pause
+    \item Except STL, all other C++ libraries are usually non-standard and hence need to be installed separately from g++
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Standard Template Library}
+  \begin{itemize}
+    \item Simple repeatedly used procedures are needed to be coded by the programmer each time he wants to use them\pause
+    \item For eg : Sorting, searching, string handling, etc\pause
+    \item Some repeatedly used data structures are also needed to be developed from scratch each time\pause
+    \item For eg : Stack, List, Linked List, Queue, Set, Tree, Heap, Map...\pause
+    \item A secondary aim of C++ is also to enable the programmer to focus more on the larger picture, eliminating the details quickly\pause
+    \item Hence, C++ comes with pre-defined fast, generic, template based collection of classes which are also very efficient
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Standard Template Library}
+  \begin{itemize}
+    \item The Standard Template Library (STL) is a C++ software library \pause
+    \item The STL was created as the first library of generic algorithms and data structures for C++\pause
+    \item Idea behind STL: generic programming, abstractness without loss of efficiency, the Von Neumann computation model\pause
+    \item The STL achieves its results through the use of templates.\pause
+    \item Modern C++ compilers are optimized to minimize any abstraction penalty arising from heavy use of the STL.\pause
+    \item The STL provides a ready-made set of common classes for C++, that can be used with any built-in type and any user-defined type
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Standard Template Library}
+  \begin{itemize}
+  \item The Standard Template Library (STL) is composed of 4 parts:\pause
+    \begin{itemize}
+    \item Containers: Stack, Queue, List etc\pause
+    \item Algorithms: Sort, Search, etc\pause
+    \item Functors: Function Objects\pause
+    \item Iterators: Random, Forward, etc
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{STL: Containers}
+  \begin{block}{Deque}
+    \begin{itemize}
+    \item Double-ended queues are sequence containers with dynamic sizes that can be expanded or contracted on both ends\pause
+    \item Unlike arrays, their size can change dynamically, with their storage being handled automatically by the container.\pause
+    \item Unlike vectors, deques are not guaranteed to store all its elements in contiguous storage locations.\pause
+    \item Thus deques do not allow direct access by offsetting pointers to elements like arrays or vectors.\pause
+    \item The elements of a deque can be scattered in different chunks of storage. Memory is allocated in chunks to avoid over scattering.\pause
+    \item Internally, more complex than vectors, but can be more efficient if the sequences are large
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{STL: Containers}
+  \begin{block}{List}
+    \begin{itemize}
+    \item Sequence containers allowing constant time insert and erase operations within the sequence, and iteration in both directions.\pause
+    \item List containers are implemented as doubly-linked lists\pause
+    \item They are very similar to forward\_list: The main difference being that forward\_list objects are single-linked lists\pause
+    \item The main drawback of lists is that they lack direct access to the elements by their position\pause
+    \item Lists perform generally better in inserting, extracting and moving elements in any position
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{STL: Containers}
+  \begin{block}{Stack}
+    \begin{itemize}
+    \item Implements the LIFO (Last In First Out) sequencing on the elements, with only one end for all insertion and extraction of data\pause
+    \item Needs 2 arguments : Type of data, and type of container\pause
+    \item Container is the type of the stack and should support the usual operations like push(), pop() etc\pause
+    \item Standard containers of vector, deque and list can be used. By default, the standard container deque is used.\pause
+    \item template < class T, class Container = deque<T> > class stack;
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{STL: Containers}
+  \begin{block}{Maps}
+    \begin{itemize}
+    \item Maps are associative containers that store elements formed by a combination of a (key, value), following a specific order.\pause
+    \item In a map, the key values are generally used to sort and uniquely identify the elements\pause
+    \item While the mapped values store the content associated to this key.\pause
+    \item A unique feature of maps is that they implement the operator[], which allows for direct access of the mapped value.\pause
+    \item Maps are typically implemented as binary search trees
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Sample Code}
+\begin{lstlisting}
+    #include<stdio.h>
+    #include<iostream>
+    // A comment
+    int main(void)
+    {
+      printf(``Hello World\n'');
+      return 0;
+    }
+\end{lstlisting}
+\end{frame}
+
+\end{document}

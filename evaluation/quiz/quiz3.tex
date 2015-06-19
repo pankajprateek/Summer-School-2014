@@ -1,0 +1,58 @@
+\documentclass[17pt]{extarticle}
+\usepackage{geometry}  
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage{graphicx} % Required to insert images
+%\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage{xcolor}
+
+\usepackage{multicol}
+\setlength{\columnseprule}{1pt}
+\def\columnseprulecolor{\color{blue}}
+\geometry{body={6.5in, 9.0in},
+  left=0.9in,
+  top=1in
+}
+
+\lstset{language=C++,
+  basicstyle=\ttfamily,
+  tabsize=3,
+  keywordstyle=\color{blue}\ttfamily,
+  stringstyle=\color{green}\ttfamily,
+  commentstyle=\color{red}\ttfamily,
+  morecomment=[l][\color{magenta}]{\#},
+  % backgroundcolor=\color{black!5},
+  % basicstyle=\footnotesize,
+}
+
+\pagestyle{empty}
+\date{ }
+\begin{document}
+\begin{center}
+\textbf{\LARGE{ACA Summer School 2014}}\vspace{.5cm}
+
+\large{Advanced C\texttt{++}} \\ \vspace{.5cm}
+
+\textbf{\large{Quiz 3}(Time: 15 min)}\\
+\end{center}
+
+\begin{enumerate}
+\item Define a \texttt{Matrix} and a \texttt{Vector} class which support variable size matrices. Define the following functions (using operator overloading):
+  \begin{enumerate}
+  \item Multiplication and addition functions for matrix
+  \item Multiplication and addition functions for vector
+  \item Multiplication of a vector with a matrix 
+  \end{enumerate}
+  Concepts you might need: Constructors, Destructors, Dynamic Memory, friend\\
+  Quiz has been uploaded on the course webpage\\
+  The quiz is to be submitted. Submit it on a sheet of paper and don't forget to mention your name \underline{AND} roll number.
+\end{enumerate}
+
+
+\end{document}

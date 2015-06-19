@@ -1,0 +1,155 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}  
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage{graphicx} % Required to insert images
+%\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage{xcolor}
+\geometry{body={6.5in, 9.0in},
+  left=0.9in,
+  top=1in
+}
+
+\lstset{language=C++,
+  basicstyle=\ttfamily,
+  tabsize=3,
+  keywordstyle=\color{blue}\ttfamily,
+  stringstyle=\color{green}\ttfamily,
+  commentstyle=\color{red}\ttfamily,
+  morecomment=[l][\color{magenta}]{\#},
+  % backgroundcolor=\color{black!5},
+  % basicstyle=\footnotesize,
+}
+
+\pagestyle{empty}
+\date{ }
+\begin{document}
+\begin{center}
+\textbf{\LARGE{ACA Summer School 2014}}\vspace{.5cm}
+
+\large{Advanced C\texttt{++}} \\ \vspace{.5cm}
+
+\textbf{\large{Endsem}}(Time: 1 hr; Max Marks: 50)
+\end{center}
+Name: \\
+Roll number: 
+\begin{itemize}
+\item No weightage for writing extra/unnecessary code. Write only what is necessary.
+\item Precise, clear and unambiguous answers will be appreciated.
+\end{itemize}
+
+\begin{enumerate}
+\item Is something wrong in the following code? If no, what will be the output? If yes, what needs to be done to correct it? (3 marks)
+  \begin{lstlisting}
+#include<iostream>
+using namespace std;
+
+class color {
+private:
+  int red, blue, green;
+public:
+  color() {}
+  color(int a, int b, int c) {red = a; blue = b; green = c;}
+};
+class item {
+private:
+  int a;
+public:
+  item(int x) {a = x;}
+  item() {}
+  friend void f(item x, color y);
+};
+void f(item x, color y) {
+  cout<< x.a << endl;
+  cout<< y.red << endl;
+  cout<< y.green << endl;
+  cout<< y.blue << endl;
+}
+int main() {
+  item obj1(20);
+  color white(255,255,255);
+  f(obj1, white);
+  return 0;
+}
+  \end{lstlisting}\vspace*{70mm}
+\item 
+  \begin{enumerate}[a)]
+  \item Write a sample code to demonstrate run-time polymorphism. (5 marks)
+  \item What calling mechanism is used while passing pointers? Call by value or call by reference? Please give reason for your claim. (3 marks)
+  \end{enumerate}\vspace*{130mm}
+\item Write the copy constructor for the following class: (7 marks)
+  \begin{lstlisting}
+class matrix {
+private:
+  int rows, cols;
+int** mat;
+public:
+  matrix();
+  matrix(int r, int c);
+  ~matrix();
+  void setVal(int r, int c, int val);
+  int getVal(int r, int c);
+};
+  \end{lstlisting}
+  Here, setVal() sets the value of cell (r,c) to val and getVal() returns the value in cell (r,c). Write only the copy constructor. Main etc is not needed.\vspace*{90mm}
+\item What is the need for a virtual destructor? Explain and give a simple example to support your explanation. (7 marks)
+\item \vspace*{60mm}What will be the output of the following code:(5 marks)
+  \begin{lstlisting}
+#include <iostream>
+#include <vector>
+using namespace std;
+int main() {
+  vector<int> myVec(5,25);
+  iterator::vector<int> it;
+  it = myVec.begin();
+  myVec.insert(it, 10);
+  it = myVec.begin()+2;
+  myVec.erase(it);
+  int sum = 0;
+  for(it = myVec.begin(); it!= myVec.end(); it++) {
+    sum = sum + (*it);
+    cout<<`` ''<<*it;
+  }
+  cout<<endl;
+  cout<<sum;
+  return 0;
+}
+  \end{lstlisting}\newpage
+\item What is multiple inheritance? Give an example for multiple inheritance. Just give the design of the classes. Do not define the functions. Assume that base class has a non-default constructor. (3+7 marks)\vspace*{75mm}
+\item In the following code, for each derived class, state what variables/functions are present in their private, protected and public sections : (3+5 = 8 marks)
+  \begin{lstlisting}
+class base {
+private:
+  int a;
+protected:
+  float f1();
+public:
+  float b;
+  void f2();
+};
+class derived1 : protected base {
+private:
+  char c;
+protected:
+  double d;
+  double f3();
+public:
+  void f2(int x);
+};
+class derived2 : public derived1 {
+private:
+  long e;
+public:
+  void f4();
+};
+  \end{lstlisting}
+
+\end{enumerate}
+
+\end{document}

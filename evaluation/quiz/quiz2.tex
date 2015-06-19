@@ -1,0 +1,88 @@
+\documentclass[12pt]{article}
+\usepackage{geometry}  
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage{graphicx} % Required to insert images
+%\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage{xcolor}
+\usepackage{multicol}
+\setlength{\columnseprule}{1pt}
+\def\columnseprulecolor{\color{blue}}
+\geometry{body={6.5in, 9.0in},
+  left=0.9in,
+  top=1in
+}
+
+\lstset{language=C++,
+  basicstyle=\ttfamily,
+  tabsize=3,
+  keywordstyle=\color{blue}\ttfamily,
+  stringstyle=\color{green}\ttfamily,
+  commentstyle=\color{red}\ttfamily,
+  morecomment=[l][\color{magenta}]{\#},
+  % backgroundcolor=\color{black!5},
+  % basicstyle=\footnotesize,
+}
+
+\pagestyle{empty}
+\date{ }
+\begin{document}
+\begin{center}
+\textbf{\LARGE{ACA Summer School 2014}}\vspace{.5cm}
+
+\large{Advanced C\texttt{++}} \\ \vspace{.5cm}
+
+\textbf{\large{Quiz 2}(Will not be graded)}\\
+\end{center}
+
+\begin{enumerate}
+\item Explain the output of the following code: (Time: 5 min)
+  \begin{multicols}{2}
+    \begin{lstlisting}
+class A {
+public:
+  void f() {
+    cout << ``A::f'' << endl;
+  }
+  virtual void g() {
+    cout << ``A::g'' << endl;
+  }
+};
+class B : public A {
+public:
+  void f() {
+    cout << ``B::f'' << endl;
+  }
+  virtual void g() {
+    cout << ``B::g'' << endl;
+  }
+};
+    \end{lstlisting}
+    \columnbreak
+    \begin{lstlisting}
+int main(int argc, char** argv) {
+  A a;
+  B b;
+  A* aPtr = &a;
+  A* abPtr = &b;
+  B* bPtr = &b;
+  aPtr->f();
+  aPtr->g();
+  abPtr->f();
+  abPtr->g();
+  bPtr->f();
+  bPtr->g();
+  return 0;
+}
+    \end{lstlisting}
+  \end{multicols}
+\end{enumerate}
+
+
+\end{document}

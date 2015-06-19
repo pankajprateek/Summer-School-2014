@@ -1,0 +1,448 @@
+\documentclass{beamer}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{fancyvrb}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{listings}
+\mode<presentation>
+%{ \usetheme{Warsaw} }
+\title{ACA Summer School 2014\\ Advanced C\texttt{++}}
+
+\setbeamercovered{transparent=5}
+
+\author{Pankaj Prateek}
+\institute{ACA, CSE, IIT Kanpur}
+\date{\today}
+
+\lstset{language=C++,
+  basicstyle=\ttfamily,
+  tabsize=3,
+  keywordstyle=\color{blue}\ttfamily,
+  stringstyle=\color{green}\ttfamily,
+  commentstyle=\color{red}\ttfamily,
+  morecomment=[l][\color{magenta}]{\#},
+  backgroundcolor=\color{black!5},
+  % basicstyle=\footnotesize,
+}
+ 
+\AtBeginSection[]  % "Beamer, do the following at the start of every section"
+{
+\begin{frame}<beamer> 
+\frametitle{Outline} % make a frame titled "Outline"
+\tableofcontents[currentsection]  % show TOC and highlight current section
+\end{frame}
+}
+
+\begin{document}
+%----------- titlepage ----------------------------------------------%
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%% \begin{frame}[fragile]{Class: Local}
+%%   \begin{itemize}
+%%   \item Local class: A class declared inside another class\pause
+%%   \item Declarations in a local class can only use type names, enumerations, static variables from the enclosing scope, as well as external functions and variables\pause
+%%   \item A local class cannot have static data members\pause
+%%   \item Enclosing functions do not have any special access to the members of the local class
+%%   \end{itemize}
+%% \end{frame}
+
+\begin{frame}[fragile]{Pointers Revisited}
+  \begin{itemize}
+  \item Pointers are derived data types that contain memory address of some other variable\pause
+  \item Dereferencing a pointer and pointer arithmetic works exactly in the same way as with structs and built-in types\pause
+  \item Accessing (Class Pointers):
+    \begin{lstlisting}
+item x(12,100);
+item* ptr = &x;
+// 
+Ways to access
+x.getDetails();
+ptr->getDetails();
+(*ptr).getDetails();
+// All three ways are equivalent
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Pointers Revisited}
+  \begin{itemize}
+  \item Void Pointers:\pause
+    \begin{itemize}
+      \item Generic pointers which can refer to variables of any type\pause
+      \item Need to be typecasted to proper type before dereferencing\pause
+    \end{itemize}
+  \item Null Pointers:\pause
+    \begin{itemize}
+    \item Pointers to a specific data type which does not point to any object of that type\pause
+    \item ``Null'' or ``0'' pointers
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: \texttt{this} pointer}
+  \begin{itemize}
+  \item \texttt{this} pointer is used to represent the object for which the current member function was called\pause
+  \item Automatically passed as an implicit arguement when a member function is called\pause
+  \item \texttt{*this} is the reference to the object which called the function
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: \texttt{this} pointer}
+  \begin{lstlisting}
+class Person {
+  double height;
+public:
+  person& taller(person& x) {
+    if (x.height > height) 
+      return x;
+    else
+      return *this;
+  }
+};
+
+Person A, B, tallest;
+tallest = A.taller(B);
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Classes without constructors}
+  \begin{itemize}
+  \item We have been using member functions to set the values of member variables
+    \begin{lstlisting}
+class item {
+  int number, cost;
+public:
+  void setValue(int itemNum, int itemCost);
+  void getValue(void);
+};      
+    \end{lstlisting}\pause
+  \item Classes should allow to use customized definitons in the same way as we use built-in definitions. Initialization and destruction properties are important for this.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Constructors}
+  \begin{itemize}
+  \item Constructors are special member functions whose task is to initialize objects of a class.\pause
+  \item Constructors have the same name as the class\pause
+  \item Constructors are invoked when an object of the class is created.\pause
+  \item Constructors do not have a return type
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Constructors}
+  \begin{lstlisting}
+class item {
+  int number;
+  int cost;
+public:
+  item(void) {  // Constructor
+    number = cost = 0;
+  }
+  void getValue(void);
+};
+int main() {
+  item soap, pencil, pen;
+  soap.getValue();
+  pencil.getValue();
+  pen.getValue();
+}
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Constructor Properties}
+  \begin{itemize}
+  \item Constructors should be declared in the public section of the class, except for some really special cases (singleton design patterns)\pause
+  \item Constructors cannot have a return type (not even void)\pause
+  \item Constructors can have multiple parameters and default values (just like normal functions)\pause
+  \item A class can have multiple constructors. All have the same name (the name of the class), but which constructor is called depends on the signature of the constructor. This is called constructor overloading.\pause
+  \item Constructors cannot be virtual (discussed later)\pause
+  \item Constructors can have reference to an object of the same class as an input parameter. Such constructors are copy constructors
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Default Constructor}
+  \begin{itemize}
+  \item Even if when a constructor has not been defined, the compiler will define a default constructor. This constructor does nothing, it is an empty constructor.\pause
+  \item If some constructors are defined, but they are all non-default, the compiler will not implicitly define a default constructor. This might cause problems. Thus, define a default constructor whenever a non-default constructor is defined.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Default Constructor}
+  \begin{lstlisting}
+class item {
+  int number, cost;
+public:
+  item(); //default
+  item(int itemNum, int itemCost) {
+    number = itemNum; cost = itemCost;
+  }
+};
+item pen1, pen2;
+item pencil1(123, 40), pencil2(123, 10);
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Multiple Constructors}
+  \begin{itemize}
+  \item Which constructor is called depends on the constructor signature.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Copy Constructors}
+  \begin{itemize}
+  \item Constructors which are used to declare and initialize an object from another object, most probably via a reference to that object.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Copy Constructors}
+  \begin{lstlisting}
+class item {
+  int number, cost;
+public:
+  item(); //default
+  item(int itemNum, int itemCost) {
+    number = itemNum; cost = itemCost;
+  }
+  item(item& temp) {
+    // Accessing private members
+    number = temp.number;
+    cost = temp.cost;
+  }
+};
+item pen1(123, 40);
+item pen2(&pen1);
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Private Members}
+  \begin{itemize}
+  \item Why can one access private members of another object in the definition of the copy constructor?\pause
+  \item Access modifiers (private, public) work only at class level and not at object level. Gence two objects of the same class can access each other's private members without any error!!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Copy Constructors}
+  \begin{itemize}
+  \item The process of Initialization of an object through a copy cnstructor is known as copy initialization.
+%%   \item What happens in the following snippet of code % can keep for exam
+%%     \begin{lstlisting}
+%% item abc(123, 20);
+%% item def;
+%% def = abc;
+%%     \end{lstlisting}
+%%     No copy constructor invoked, the statement is not initialization statement. Constructor is only called when an object is defined (or is allocated memory). This is a valid C\texttt{++} statement though, the overloaded assignment operator is being executed. Values are copied from abc to def, member by member.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Destructors}
+  \begin{itemize}
+  \item Special functions like constructors. Destroy objects created by a constructor\pause
+  \item They neither have any input arguement, not a return value.\pause
+  \item Implicitly called by a compiler when the object goes out of scope. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Code Reusability}
+  \begin{itemize}
+  \item Nobody likes to write code for the same functionality again and again without any significant improvement\pause
+  \item Using already written code is more reliable, saves time, money and frustration for the programmer of debugging\pause
+  \item Example of reuse: for students and teachers, the properties of the class person are common, and hence should be implented only once\pause
+  \item Reuse of class : Inheritance\pause
+  \item Inheritance : Using old classes and their properties to make new classes\pause
+  \item Old class : Base class\pause
+  \item New class : Derived class\pause
+  \item The derived class inherits, some or all, properties of the base class
+  \end{itemize}
+\end{frame}
+
+%% \begin{frame}[fragile]{Inheritance}
+%%   \begin{lstlisting}
+%% class new_class : visibility_mode old_class {
+%%   // Some stuff for new class
+%%   // Nothing special
+%% };
+%%   \end{lstlisting}\pause
+%%   \begin{itemize}
+%%     \item Indicates that the new\_cass had been derived from the old\_class in the specified visibility mode.
+%%   \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Inheritance}
+%%   \item \alert{Only ``public'' members are inherited}. Private members of base class are never accessible to any derived class. They can be accessed indirectly using public members from the same base class.
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Inheritance: Private}
+%%   \begin{lstlisting}
+%% class XYZ {
+%%   // members of XYZ
+%% }
+%% class ABC : private XYZ {
+%%   // members of ABC
+%% }
+%%   \end{lstlisting}\pause
+%%   \begin{itemize}
+%%     \item Privately inherited/derived: ``Public'' members of the base class become ``private'' members of the derived class\pause
+%%     \item Thus the public members of XYZ inherited into ABC can only be accessed through public functions of ABC\pause
+%%     \item As a result, the inherited members of the base class are not directly accessible to the objects of the derived class. Access is restricted to the public members only
+%%   \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Inheritance: Private}
+%%   \begin{lstlisting}
+%% // Derived class in private Inheritance
+%% // How it looks in concept
+%% // NOT REAL!!!
+%% class ABC: private XYZ {
+%% private:
+%%   ... private members of XYZ
+%%   ... private members of ABC
+%% public:
+%%   ... public members of ABC
+%% };
+%%   \end{lstlisting}
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Inheritance: Public}
+%%   \begin{lstlisting}
+%% class XYZ {
+%%   // members of XYZ
+%% }
+%% class ABC : public XYZ {
+%%   // members of ABC
+%% }
+%%   \end{lstlisting}\pause
+%%   \begin{itemize}
+%%     \item Publicaly inherited/derived: ``Public'' members of the base class become ``public'' members of the derived class\pause
+%%     \item Thus the public members of XYZ inherited into ABC can be accessed directly by the objects of ABC
+%%   \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Inheritance: Private}
+%%   \begin{lstlisting}
+%% // Derived class in private Inheritance
+%% // How it looks in concept
+%% // NOT REAL!!!
+%% class ABC: private XYZ {
+%% private:
+%%   ... private members of ABC
+%% public:
+%%   ... public members of XYZ
+%%   ... public members of ABC
+%% };
+%%   \end{lstlisting}
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Inheritance: Protected}
+%%   \begin{itemize}
+%%     \item At times we may require that a private member be inherited by the derived class\pause
+%%     \item An obvious way to achieve this is to make it public. But at the cost of losing the advantage of Data Hiding\pause
+%%     \item Hence to facilitate this, C++ has a new keyword : protected\pause
+%%     \item A ``protected'' member of a class, is accessible by the member functions within that class or any class ``immediately'' derived from it
+%%   \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Inheritance: Protected}
+%%   \begin{lstlisting}
+%% class class_name {
+%% private:
+%%   // visible only to member functions 
+%%   // of this class
+%% protected:
+%%   // visible only to member functions of 
+%%   // this class and immediate derived class
+%% public:
+%%   // visible to all functions in the program
+%% }
+%%   \end{lstlisting}
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Inheritance: Protected}
+%%   \begin{itemize}
+%%     \item The keyword protected is used in the same way public and private are used\pause
+%%     \item With this, C++ also allows a protected mode of inheritance as well along with public and private\pause
+%%     \item Private and protected members of a class can now be accessed by friend functions or member functions of a friend class
+%%   \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Visibility of Inherited Members}
+%%   \begin{table}
+%%     \caption{Derived Class Members: Visibility}
+%%     \begin{tabular}{|c|c|c|c|}\hline
+%%       Declaration $\rightarrow$ & Private & Protected & Public\\\hline
+%%       private & Not inherited & Not inherited & Not inherited\\\hline
+%%       protected & Private & Protected & Protected\\\hline
+%%       public & private & protected & public\\\hline
+%%     \end{tabular}
+%%   \end{table}
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Multilevel Inheritance}
+%%   \begin{itemize}
+%%     \item It is when there is a series of inheritance from one class to its child class\pause
+%%     \item The general rules of inheritance are followed as they are.\pause
+%%       \begin{center}
+%%         Class A\\ $\uparrow$\\ Class B\\ $\uparrow$\\ Class C
+%%       \end{center}\pause
+%%     \item Class B is also called intermediate base class of A\pause
+%%     \item The chain A-B-C is called inheritance path
+%%   \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Multiple Inheritance}
+%%   \begin{itemize}
+%%     \item A class can inherit from multiple classes. Hence called multiple inheritance\pause
+%%     \item Allows the user to combine several features from different cources at the beginning of creating a new class\pause
+%%       \begin{lstlisting}
+%% class D: visibility B1, visibility B2 {
+%%   // definition of D
+%% };
+%%       \end{lstlisting}\pause
+%%     \item Visibility can be either public, private or protected.\pause
+%%     \item This feature is quite unique to C\texttt{++}. Even JAVA doesn't support multiple inheritance.
+%%   \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Multiple Inheritance}
+%%   \begin{lstlisting}
+%% class B1 {
+%% public:
+%%   int abc;
+%% }
+%% class B2 {
+%% public:
+%%   int abc;
+%% }
+%% class D: visibility B1, visibility B2 {
+%%   // definition of D
+%% };
+%%   \end{lstlisting}\pause
+%%   Class D will have two variables with the same name. Ambiguity!!!
+%% \end{frame}
+
+%% \begin{frame}[fragile]{Multiple Inheritance: Ambiguity Resolution}
+%%   \begin{itemize}
+%%     \item The ambiguity is only flagged as an error if you use the ambiguous member name.\pause
+%%     \item You can resolve ambiguity by qualifying a member with its class name using the scope resolution (::) operator.
+%%   \end{itemize}
+%% \end{frame}
+
+%% \begin{frame}[fragile]
+%% \frametitle{Sample Code}
+%% \begin{lstlisting}
+%%     #include<stdio.h>
+%%     #include<iostream>
+%%     // A comment
+%%     int main(void)
+%%     {
+%%       printf(``Hello World\n'');
+%%       return 0;
+%%     }
+%% \end{lstlisting}
+%% \end{frame}
+
+\end{document}

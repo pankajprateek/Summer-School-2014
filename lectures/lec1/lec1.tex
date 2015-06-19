@@ -1,0 +1,337 @@
+\documentclass{beamer}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{fancyvrb}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{listings}
+\mode<presentation>
+%{ \usetheme{Warsaw} }
+\title{ACA Summer School 2014\\ Advanced C\texttt{++}}
+
+\setbeamercovered{transparent=5}
+
+\author{Pankaj Prateek}
+\institute{ACA, CSE, IIT Kanpur}
+\date{\today}
+
+\lstset{language=C++,
+  basicstyle=\ttfamily,
+  tabsize=3,
+  keywordstyle=\color{blue}\ttfamily,
+  stringstyle=\color{green}\ttfamily,
+  commentstyle=\color{red}\ttfamily,
+  morecomment=[l][\color{magenta}]{\#},
+  backgroundcolor=\color{black!5},
+  % basicstyle=\footnotesize,
+}
+ 
+\AtBeginSection[]  % "Beamer, do the following at the start of every section"
+{
+\begin{frame}<beamer> 
+\frametitle{Outline} % make a frame titled "Outline"
+\tableofcontents[currentsection]  % show TOC and highlight current section
+\end{frame}
+}
+
+\begin{document}
+%----------- titlepage ----------------------------------------------%
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}[fragile]{}
+  \begin{itemize}
+    \item Course website:\\
+      \url{http://www.cse.iitk.ac.in/users/aca/sumschool2014.html}
+    \item Evaluation
+      \begin{itemize}
+        \item End Sem - 50\%
+        \item Assignments / In-class quiz - 50\%
+      \end{itemize}
+    \item Timings:
+      \begin{itemize}
+      \item M-F 1430 - 1600 hrs
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Prerequisites}
+  \begin{itemize}
+    \item A good command over any programming language preferably C/C++
+      \begin{itemize}
+        \item Pointers
+        \item Structures
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Structures}
+  \begin{itemize}
+    \item How do you store the details of a person?\pause
+      \begin{lstlisting}
+char strName[20];
+int nBirthYear;
+int nBirthMonth;
+int nBirthDay;
+int nHeight;
+      \end{lstlisting}\pause
+    \item Information is not grouped in any way. \pause
+    \item To pass your information to a function, you would have to pass each variable independently.\pause
+    \item If wanted to store information about many people, would have to declare arrays.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Structures}
+  \begin{itemize}
+    \item C\texttt{++} allows to create own user-defined data types to aggregate different variables : \texttt{structs}\pause
+    \item Structure declaration
+      \begin{lstlisting}
+struct Person{
+  char strName[20];
+  int nBirthYear;
+  int nBirthMonth;
+  int nBirthDay;
+  int nHeight;  
+}; //DO NOT forget a semicolon
+      \end{lstlisting}\pause
+    \item Now \texttt{person} structure can be used as a built-in variable.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Structures}
+  \begin{itemize}
+  \item Usage
+    \begin{lstlisting}
+      struct Person p1;
+      struct Person p2;
+    \end{lstlisting}\pause
+  \item Accessing Members:
+    \begin{lstlisting}
+      p1.name = ``pankaj'';
+      p1.nBirthDay = 20;
+      p2.name = ``Rahul'';
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Structures}
+  \begin{itemize}
+  \item No memory is allocated in structure declaration\pause
+  \item Size of a structure is the sum of sizes of it elements\pause
+  \item Can pass entire structures to functions
+    \begin{lstlisting}
+void PrintInfo(struct Person p) {
+  cout << ``Name: '' << p.name <<endl;
+  cout << ``bDay: '' << p.nBirthDay <<endl;
+}
+int main() {
+  struct Person p1;
+  p1.name = ``Pankaj'';
+  p1.nBirthDay = 20;
+  PrintInfo(p1);
+}
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Structures}
+  \begin{itemize}
+  \item Always have to use the word ``\texttt{struct}''\pause
+  \item No explicit connection between members of a structure and the functions manipulating them\pause
+  \item Cannot be treated as built-in types (c1 + c2 is not valid for instances of ``\texttt{struct complex}'')\pause
+  \item Data hiding is not permitted (Why do we need this?)\pause
+  \item All members of a structure are by defaut ``\texttt{public}'' (will be discussed later)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Classes}
+  \begin{itemize}
+  \item Extension of structures\pause
+  \item Class Definition
+    \begin{lstlisting}
+class class_name {
+private:
+  variable declarations;
+  function declarations;
+public:
+  variable declarations;
+  function declarations;
+}; //DO NOT forget the semicolon
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Example}
+  \begin{itemize}
+  \item Example
+    \begin{lstlisting}
+class item {
+private:
+  int number;     // variable declarations
+  float cost;     // private by default!
+public:
+  // function declarations through prototypes
+  void getData(int a, float b);    
+  void putData(void);             
+}
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class}
+  \begin{center}
+    \alert{No memory allocated for a class definiton. It is only a ``template'', like a definition of a structure}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Public and Private}
+  \begin{itemize}
+  \item Private members are not directly accessible outside the class. They are ``hidden'' from the outside world. The only way to access them is by using public functions (if defined) which manipulate them.\pause
+  \item Public members can be accessed using the dot operator (member selection operator). Eg. student.name, item.getData()
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Objects}
+  \begin{itemize}
+  \item Class, like a structure definition, is a user-defined data type without any concrete existance.\pause
+  \item A concrete instance of a class is an object.\pause
+  \item Memory is allocated for every object that is created.\pause
+  \item An independent new set of variables is created for each object.\pause
+  \item Public members can be accessed by using the dot operator on the object while private members cannot be accessed directly.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Objects}
+  \begin{block}{Object Creation}\pause
+    \begin{itemize}
+    \item Just like variable declaration\pause
+    \item Memory is allocated for every object that is created\pause
+    \item Example:
+      \begin{lstlisting}
+item a;
+item b,c,d;
+      \end{lstlisting}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Function definitions}
+  \begin{block}{Outside the class}\pause
+    \begin{lstlisting}
+class Employee {
+  int empno, salary;
+public:
+  void set(int roll, int sal);
+};
+
+void employee::set(int roll, int sal) {
+  empno = roll;
+  salary = sal;
+}
+    \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Function definitions}
+  \begin{block}{Inside the class}\pause
+    \begin{lstlisting}
+class Employee {
+  int empno, salary;
+public:
+  void set(int roll, int sal) {
+    empno = roll;
+    salary = sal;
+  }
+};
+    \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Important Properties}
+  \begin{itemize}
+    \item Invoking other member functions from inside a member function does not require explicit use of the object\pause
+    \item Array size, if used inside classes, need to be determined at compile time (for dynamic arrays, with size to be determined at run time, ``new'' operator is used inside a constructor, will be discussed later)\pause
+    \item Arrays of objects are allowed (stored contiguously). Objects can be used as members of some other class in nested fashion.\pause
+    \item Objects, just like built-in types, can be return type of functions.\pause
+    \item Private functions and variables can only be accessed from within the class.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Classes}
+  \begin{block}{Problem}\pause
+    \begin{itemize}
+    \item Consider a class ``car'' which has the carNo, carModel, carMake fields and relevant functions to modify them.\pause
+    \item You have to count the number of objects of the class created. How do you do it?
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Static Members}
+  \begin{lstlisting}
+class item {
+  static int count;
+  // rest of class definition
+};
+int item::count;
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Static Members}
+  \begin{block}{Properties}\pause
+    \begin{itemize}
+    \item Every static member needs to be defined outside the class as well.\pause
+    \item Only one copy of the static variable is shared among all objects of the class.\pause
+    \item Visible only within the class but exists for the lifetime of the program.\pause
+    \item No object instantiation is required to access static members.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Memory Allocation of Objects}
+  \begin{itemize}
+  \item For member functions and static variables, memory is allocated when the class is defined, all objects of the class share the same function code and static variables (every class does not get its own copy). ``\texttt{this}'' pointer is implicitly passed so that the function code is executed on the correct class instance.\pause
+  \item For variables, memory is allocated when the object is defined. Each instance gets its own set of variables.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Friend}
+  \begin{itemize}
+  \item Shared functions among multiple classes\pause
+  \item Properties:\pause
+    \begin{itemize}
+      \item Can access private members of the class\pause
+      \item Often used in operator overloading\pause
+      \item Not in the scope of the class. Cannot be called using an object of the class.\pause
+      \item Can be invoked like a normal function\pause
+      \item Cannot access members of a class directly without an object of the class
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class: Friend}
+  \begin{itemize}
+  \item Properties: (cont$\dots$)\pause
+    \begin{itemize}
+      \item Can be declared as either private or public without changing the meaning\pause
+      \item Objects can be passed to the function by value or by reference\pause
+      \item A class can be defined to be the friend of another class. In that case, all member functions of one class are friends of the other class
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{References}
+  \begin{itemize}
+    \item The C\texttt{++} Programming Language\\
+      - Bjarne Stroustrup
+    \item Object Oriented Programming with C\texttt{++}\\
+      - E Balaguruswamy
+    \item \url{http://www.cplusplus.com/reference}
+    \item \url{http://www.learncpp.com/}
+    \item \url{http://www.java2s.com/Code/Cpp/CatalogCpp.htm}
+  \end{itemize}
+\end{frame}
+
+\end{document}
